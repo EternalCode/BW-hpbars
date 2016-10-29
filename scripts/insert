@@ -130,19 +130,12 @@ with open(args.output, 'rb+') as rom:
                                 continue
 
                         hook(rom, code, offset, int(register))
-        last = 0;                     
+                     
         if args.debug:
                 width = max(map(len, table.keys())) + 1
                 for key in sorted(table.keys()):
                         fstr = ('{:' + str(width) + '} {:08X}')
                         print(fstr.format(key + ':', table[key] + 0x08000000))
-                        last = (table[key] + 0x08000000)
-        rom.seek(int(0x168CDB))
-        array = bytearray()
-        array.append(int("0x" + hex(last)[7:], 0))
-        array.append(int("0x" + hex(last)[5:7], 0))
-        array.append(int("0x" + hex(last)[3:5], 0))
-        array.append(int(hex(last)[:3], 0))
 
         # bin data for replaced images
         with open('bin_replace', 'r') as bin_files:
@@ -161,7 +154,7 @@ with open(args.output, 'rb+') as rom:
                         if line.strip().startswith('#'): continue
                         symbol, address = line.split()
                         rom_write(int(symbol, 0), address)
-        rom.write(array)
+
 
 
 
